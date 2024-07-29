@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Grey-1011/rssagg/internal/auth"
 	"github.com/Grey-1011/rssagg/internal/database"
 	"github.com/google/uuid"
 )
 
+// handlerCreateUser -
 func (cfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Name string `json:"name"`
@@ -39,18 +39,7 @@ func (cfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) 
 	respondWithJSON(w, http.StatusOK, databaseUserToUser(user))
 }
 
-func (cfg *apiConfig) handlerUsersGet(w http.ResponseWriter, r *http.Request) {
-	apiKey, err := auth.GetAPIKey(r.Header)
-	if err != nil {
-		respondWithError(w, http.StatusUnauthorized, "Couldn't find api key")
-		return
-	}
-
-	user, err := cfg.DB.GetUserByAPIKey(r.Context(), apiKey)
-	if err != nil {
-		respondWithError(w, http.StatusNotFound, "Couldn't get user")
-		return
-	}
-
+// handlerUsersGet -
+func (cfg *apiConfig) handlerUsersGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	respondWithJSON(w, http.StatusOK, databaseUserToUser(user))
 }
