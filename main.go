@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Grey-1011/rssagg/internal/database"
 	"github.com/go-chi/chi"
@@ -61,10 +62,10 @@ func main() {
 	// v1Router.HandleFunc("/healthz", handlerReadiness)
 	v1Router.Get("/healthz", handlerReadiness)
 	v1Router.Get("/err", handlerErr)
-	
+
 	v1Router.Post("/users", apiCfg.handlerCreateUser)
 	v1Router.Get("/users", apiCfg.middlewareAuth(apiCfg.handlerUsersGet))
-	
+
 	v1Router.Post("/feeds", apiCfg.middlewareAuth(apiCfg.handlerFeedCreate))
 	v1Router.Get("/feeds", apiCfg.handlerFeedsGet)
 
@@ -78,6 +79,10 @@ func main() {
 		Handler: router,
 		Addr:    ":" + portString,
 	}
+
+	const collectionConcurrency = 10
+	const collectionInterval = time.Minute
+	go startScraping(dbQueries, collectionConcurrency, collectionInterval)
 
 	log.Printf("Server starting on port %v", portString)
 	err = srv.ListenAndServe()
