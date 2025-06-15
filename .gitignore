@@ -1,4 +1,4 @@
 .vscode/
 rssagg
-.env
+# .env
 thunder-tests/
