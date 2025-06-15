@@ -41,7 +41,7 @@ func (cfg *apiConfig) handlerFeedFollowCreate(w http.ResponseWriter, r *http.Req
 
 // handlerFeedFollowDelete -
 func (cfg *apiConfig) handlerFeedFollowDelete(w http.ResponseWriter, r *http.Request, user database.User) {
-	// chi 路由器获取 url中的参数方法:
+	// chi 路由器获取 url中的参数方法: -- 路径参数(查询参数)
 	feedFollowIDStr := chi.URLParam(r, "feedFollowID")
 
 	// http.NewServeMux 路由器获取url 中参数方法:

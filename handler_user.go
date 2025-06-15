@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
 	"github.com/Grey-1011/rssagg/internal/database"
 	"github.com/google/uuid"
 )

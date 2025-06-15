@@ -22,7 +22,10 @@ type apiConfig struct {
 func main() {
 	// .env文件是一种方便的存储环境（配置）变量的方法。
 	// 使用 godotenv 自动加载 .env 文件中的环境变量。
-	godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 
 	// Use os.Getenv() to get the value of PORT.
 	portString := os.Getenv("PORT")
@@ -72,6 +75,8 @@ func main() {
 	v1Router.Post("/feed_follows", apiCfg.middlewareAuth(apiCfg.handlerFeedFollowCreate))
 	v1Router.Delete("/feed_follows/{feedFollowID}", apiCfg.middlewareAuth(apiCfg.handlerFeedFollowDelete))
 	v1Router.Get("/feed_follows", apiCfg.middlewareAuth(apiCfg.handlerFeedFollowsGet))
+
+	v1Router.Get("/posts", apiCfg.middlewareAuth(apiCfg.handlerPostsGet))
 
 	router.Mount("/v1", v1Router)
 

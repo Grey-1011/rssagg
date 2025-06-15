@@ -28,21 +28,23 @@ func databaseUserToUser(dbUser database.User) User {
 }
 
 type Feed struct {
-	ID            uuid.UUID `json:"id"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
-	Name          string    `json:"name"`
-	Url           string    `json:"url"`
-	UserID        uuid.UUID `json:"user_id"`
+	ID            uuid.UUID  `json:"id"`
+	CreatedAt     time.Time  `json:"created_at"`
+	UpdatedAt     time.Time  `json:"updated_at"`
+	Name          string     `json:"name"`
+	Url           string     `json:"url"`
+	UserID        uuid.UUID  `json:"user_id"`
 	LastFetchedAt *time.Time `json:"last_fetched_at"`
 }
-// NullTime convert to *time.Time 
+
+// NullTime convert to *time.Time
 func nullTimeToTimePtr(t sql.NullTime) *time.Time {
 	if t.Valid {
 		return &t.Time
 	}
 	return nil
 }
+
 // databaseFeedToFeed -
 func databaseFeedToFeed(feed database.Feed) Feed {
 	return Feed{
@@ -91,4 +93,45 @@ func databaseFeedFollowsToFeedFollows(feedFollows []database.FeedFollow) []FeedF
 		result[i] = databaseFeedFollowToFeedFollow(feedFollow)
 	}
 	return result
+}
+
+type Post struct {
+	ID          uuid.UUID  `json:"id"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	Title       string     `json:"title"`
+	Url         string     `json:"url"`
+	Description *string    `json:"description"`
+	PublishedAt *time.Time `json:"published_at"`
+	FeedID      uuid.UUID  `json:"feed_id"`
+}
+
+// databasePostToPost -
+func databasePostToPost(post database.Post) Post {
+	return Post{
+		ID:          post.ID,
+		CreatedAt:   post.CreatedAt,
+		UpdatedAt:   post.UpdatedAt,
+		Title:       post.Title,
+		Url:         post.Url,
+		Description: nullStringToStringPtr(post.Description),
+		PublishedAt: nullTimeToTimePtr(post.PublishedAt),
+		FeedID:      post.FeedID,
+	}
+}
+
+// databasePostsToPosts -
+func databasePostsToPosts(posts []database.Post) []Post {
+	result := make([]Post, len(posts))
+	for i, post := range posts {
+		result[i] = databasePostToPost(post)
+	}
+	return result
+}
+
+func nullStringToStringPtr(s sql.NullString) *string {
+	if s.Valid {
+		return &s.String
+	}
+	return nil
 }

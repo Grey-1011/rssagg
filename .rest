@@ -1,0 +1,169 @@
+# Create a user
+### Endpoint: POST /v1/users
+## Example body: { "name": "Xiaoxin" }
+## Example response: 
+# {
+#   "id": "c8f30b7e-ea42-433f-a328-c67927399878",
+#   "created_at": "2025-05-09T07:54:53.053609Z",
+#   "updated_at": "2025-05-09T07:54:53.053609Z",
+#   "name": "Xiaoxin",
+#   "api_key": "816c4055636bece92dcad3a673761fae8ef48e9ad65dd7982482b213745903b7"
+# }
+
+POST http://localhost:8080/v1/users
+Content-Type: application/json
+
+{
+  "name": "Xiaoxin"
+}
+
+
+
+
+
+# Get the user
+### Endpoint: `GET /v1/users`
+## Request headers: `Authorization: ApiKey <key>`
+## Example response body:
+# {
+#   "id": "c8f30b7e-ea42-433f-a328-c67927399878",
+#   "created_at": "2025-05-09T07:54:53.053609Z",
+#   "updated_at": "2025-05-09T07:54:53.053609Z",
+#   "name": "Xiaoxin",
+#   "api_key": "816c4055636bece92dcad3a673761fae8ef48e9ad65dd7982482b213745903b7"
+# } 
+
+GET http://localhost:8080/v1/users
+Content-Type: application/json
+Authorization: ApiKey 816c4055636bece92dcad3a673761fae8ef48e9ad65dd7982482b213745903b7
+
+
+
+
+# Create a feed
+### Endpoint: `POST /v1/feeds`
+## Example request body:
+# {
+#   "name": "The Boot.dev Blog",
+#   "url": "https://blog.boot.dev/index.xml"
+# }
+## Example response body:
+# {
+#   "id": "4a82b372-b0e2-45e3-956a-b9b83358f86b",
+#   "created_at": "2021-05-01T00:00:00Z",
+#   "updated_at": "2021-05-01T00:00:00Z",
+#   "name": "The Boot.dev Blog",
+#   "url": "https://blog.boot.dev/index.xml",
+#   "user_id": "d6962597-f316-4306-a929-fe8c8651671e"
+# }
+POST http://localhost:8080/v1/feeds
+Authorization: ApiKey 816c4055636bece92dcad3a673761fae8ef48e9ad65dd7982482b213745903b7
+Content-Type: application/json
+# 请求体必须与请求头之间有一个空行
+
+{
+  "name": "Baidu",
+  "url": "https://www.baidu.com/index.xml"
+}
+
+## Update Create a feed: 创建feed时,自动创建feed_follow
+## response body:
+# {
+#   "feed": { the feed object },
+#   "feed_folow": { the feed follow object }
+# }
+# {
+#   "feed": {
+#     "id": "a379fae7-6638-4d35-a3c6-d3a33e7c9f4a",
+#     "created_at": "2025-05-10T14:17:47.595386Z",
+#     "updated_at": "2025-05-10T14:17:47.595386Z",
+#     "name": "v2ex",
+#     "url": "https://www.v2ex.com/index.xml",
+#     "user_id": "c8f30b7e-ea42-433f-a328-c67927399878",
+#     "last_fetched_at": null
+#   },
+#  "feed_follow": {
+#     "id": "d75f9db3-25b9-4e5f-b30e-4905ee186a1c",
+#     "created_at": "2025-05-10T14:17:47.601382Z",
+#     "updated_at": "2025-05-10T14:17:47.601382Z",
+#     "feed_id": "a379fae7-6638-4d35-a3c6-d3a33e7c9f4a",
+#     "user_id": "c8f30b7e-ea42-433f-a328-c67927399878"
+#   }
+# }
+
+
+
+
+# Get all feeds
+### Endpoint: `GET /v1/feeds`
+## Example response:
+# [
+#   {
+#     "id": "e860acc5-8ffc-4edf-ae73-db93843bcb80",
+#     "created_at": "2024-07-31T06:44:25.728166Z",
+#     "updated_at": "2025-05-09T19:41:07.494581Z",
+#     "name": "The Boot.dev Blog",
+#     "url": "https://blog.boot.dev/index.xml",
+#     "user_id": "987795d0-3a9f-4683-8e8b-0be71a7aa4b2",
+#     "last_fetched_at": "2025-05-09T19:41:07.494581Z"
+#   }
+# ]
+GET http://localhost:8080/v1/feeds
+Content-Type: application/json
+
+
+
+
+# Create a feed follow
+### Endpoint: `POST /v1/feed_follows`
+## Requires authentication
+## Exapmle request body
+# {
+#   "feed_id": "e860acc5-8ffc-4edf-ae73-db93843bcb80"
+# }
+## Example response body
+# {
+#   "id": "f445b248-7bbb-4555-9b11-b4287c263893",
+#   "created_at": "2025-05-09T12:07:47.7944Z",
+#   "updated_at": "2025-05-09T12:07:47.7944Z",
+#   "feed_id": "e860acc5-8ffc-4edf-ae73-db93843bcb80",- blog.boot.dev
+#   "user_id": "c8f30b7e-ea42-433f-a328-c67927399878" - Xiaoxin
+# }
+POST http://localhost:8080/v1/feed_follows
+Authorization: ApiKey 816c4055636bece92dcad3a673761fae8ef48e9ad65dd7982482b213745903b7
+{
+  "feed_id": "e860acc5-8ffc-4edf-ae73-db93843bcb80"
+}
+
+
+
+
+# Delete a feed follow
+### Endpoint: `DELETE /v1/feed_follows/{feedFollowID}`
+## Requires authentication
+DELETE http://localhost:8080/v1/feed_follows/d75f9db3-25b9-4e5f-b30e-4905ee186a1c
+Authorization: ApiKey 816c4055636bece92dcad3a673761fae8ef48e9ad65dd7982482b213745903b7
+
+
+
+
+
+
+
+# ** Get all feed follows for a user **
+### Endpoint: `GET /v1/feed_follows`
+## Requires authentication
+## Example response:
+# [
+#   {
+#     "id": "9ea96ed3-0fde-4aea-9a04-ee8abc21f47b",
+#     "created_at": "2024-07-31T06:44:25.734287Z",
+#     "updated_at": "2024-07-31T06:44:25.734287Z",
+#     "feed_id": "e860acc5-8ffc-4edf-ae73-db93843bcb80",
+#     "user_id": "987795d0-3a9f-4683-8e8b-0be71a7aa4b2"
+#   }
+# ]
+
+GET http://localhost:8080/v1/feed_follows
+# Lane's ApiKey
+Authorization: ApiKey 8427c5bb78b9b50d7267ff40d05331a9adb2bfd1c7bc8f0bb9e8a5d0974b4817
